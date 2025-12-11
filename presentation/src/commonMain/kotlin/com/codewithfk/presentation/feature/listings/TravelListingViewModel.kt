@@ -1,4 +1,4 @@
-package com.codewithfk.presentation.listings
+package com.codewithfk.presentation.feature.listings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

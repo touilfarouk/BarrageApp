@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.codewithfk.presentation.listings.TravelListingViewModel
+import com.codewithfk.presentation.feature.listings.TravelListingViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

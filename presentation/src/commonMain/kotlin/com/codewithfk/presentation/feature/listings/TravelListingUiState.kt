@@ -1,4 +1,4 @@
-package com.codewithfk.presentation.listings
+package com.codewithfk.presentation.feature.listings
 
 import com.codewithfk.domain.model.TravelListing
 
