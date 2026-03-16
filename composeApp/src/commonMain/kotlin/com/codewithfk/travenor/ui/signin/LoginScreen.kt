@@ -36,7 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.codewithfk.presentation.feature.register.SignInViewModel
-import com.codewithfk.presentation.feature.signIn.RegisterViewModel
+import com.codewithfk.presentation.feature.auth.TokenViewModel
 import com.codewithfk.travenor.widgets.TravenorCircleImageButton
 import com.codewithfk.travenor.widgets.TravenorSpacer
 import com.codewithfk.travenor.widgets.TravenorTextField
@@ -45,20 +45,40 @@ import org.koin.compose.viewmodel.koinViewModel
 
 
 @Composable
-fun LoginScreen(viewModel: SignInViewModel = koinViewModel()) {
+fun LoginScreen(
+    viewModel: SignInViewModel = koinViewModel(),
+    tokenViewModel: TokenViewModel = koinViewModel()
+) {
 
     val uiState = viewModel.uiState.collectAsState()
     val email = viewModel.email.collectAsState()
     val password = viewModel.password.collectAsState()
+    val tokenState = tokenViewModel.uiState.collectAsState()
 
     Scaffold {
 
-
         var passwordVisibility by remember { mutableStateOf(false) }
         Column(modifier = Modifier.fillMaxSize().padding(it)) {
+            tokenState.value.errorMessage?.let { message ->
+                Text(
+                    text = message,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
+
             uiState.value.token?.let {
 
-                Text("Signed in")
+                Text(
+                    "Signed in",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center
+                )
             }
             TravenorCircleImageButton(
                 imageVector = Icons.Default.ArrowBack,

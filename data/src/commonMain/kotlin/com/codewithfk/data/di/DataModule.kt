@@ -3,8 +3,10 @@ package com.codewithfk.data.di
 import com.codewithfk.data.datasource.DummyDataSource
 import com.codewithfk.data.datasource.RemoteDataSource
 import com.codewithfk.data.repository.ListingRepositoryImpl
+import com.codewithfk.data.repository.ProgrammeRepositoryImpl
 import com.codewithfk.data.repository.UserRepositoryImp
 import com.codewithfk.domain.repository.ListingRepository
+import com.codewithfk.domain.repository.ProgrammeRepository
 import com.codewithfk.domain.repository.UserRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
@@ -47,6 +49,12 @@ val dataModule = module {
     single<ListingRepository> {
         ListingRepositoryImpl(
             get<DummyDataSource>()
+        )
+    }
+
+    single<ProgrammeRepository> {
+        ProgrammeRepositoryImpl(
+            get<RemoteDataSource>()
         )
     }
 

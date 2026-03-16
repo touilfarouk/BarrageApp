@@ -2,12 +2,16 @@ package com.codewithfk.presentation.feature.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.codewithfk.domain.storage.TokenStorage
 import com.codewithfk.domain.usecase.SignInUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class SignInViewModel(private val loginUseCase: SignInUseCase) : ViewModel() {
+class SignInViewModel(
+    private val loginUseCase: SignInUseCase,
+    private val tokenStorage: TokenStorage
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SignInUiState())
     val uiState = _uiState.asStateFlow()
@@ -31,6 +35,7 @@ class SignInViewModel(private val loginUseCase: SignInUseCase) : ViewModel() {
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
             val result = loginUseCase.execute(_email.value, _password.value)
             result.onSuccess { token ->
+                tokenStorage.saveToken(token.accessToken)
                 _uiState.value = _uiState.value.copy(token = token, isLoading = false)
             }.onFailure { error ->
                 _uiState.value =
