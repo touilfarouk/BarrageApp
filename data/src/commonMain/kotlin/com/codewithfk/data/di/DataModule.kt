@@ -1,11 +1,8 @@
 package com.codewithfk.data.di
 
-import com.codewithfk.data.datasource.DummyDataSource
 import com.codewithfk.data.datasource.RemoteDataSource
-import com.codewithfk.data.repository.ListingRepositoryImpl
 import com.codewithfk.data.repository.ProgrammeRepositoryImpl
 import com.codewithfk.data.repository.UserRepositoryImp
-import com.codewithfk.domain.repository.ListingRepository
 import com.codewithfk.domain.repository.ProgrammeRepository
 import com.codewithfk.domain.repository.UserRepository
 import io.ktor.client.HttpClient
@@ -23,8 +20,6 @@ import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
 val dataModule = module {
-    single { DummyDataSource() }
-
     single<HttpClient> {
         HttpClient {
             install(ContentNegotiation) {
@@ -45,12 +40,6 @@ val dataModule = module {
     }
 
     single { RemoteDataSource(httpClient = get<HttpClient>(), get()) }
-
-    single<ListingRepository> {
-        ListingRepositoryImpl(
-            get<DummyDataSource>()
-        )
-    }
 
     single<ProgrammeRepository> {
         ProgrammeRepositoryImpl(
