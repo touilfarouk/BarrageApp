@@ -30,8 +30,8 @@ class SignInViewModel(private val loginUseCase: SignInUseCase) : ViewModel() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
             val result = loginUseCase.execute(_email.value, _password.value)
-            result.onSuccess { user ->
-                _uiState.value = _uiState.value.copy(user = user, isLoading = false)
+            result.onSuccess { token ->
+                _uiState.value = _uiState.value.copy(token = token, isLoading = false)
             }.onFailure { error ->
                 _uiState.value =
                     _uiState.value.copy(errorMessage = error.message, isLoading = false)

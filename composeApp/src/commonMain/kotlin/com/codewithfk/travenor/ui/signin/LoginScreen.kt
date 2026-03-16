@@ -56,9 +56,9 @@ fun LoginScreen(viewModel: SignInViewModel = koinViewModel()) {
 
         var passwordVisibility by remember { mutableStateOf(false) }
         Column(modifier = Modifier.fillMaxSize().padding(it)) {
-            uiState.value.user?.let {
+            uiState.value.token?.let {
 
-                Text(it.toString())
+                Text("Signed in")
             }
             TravenorCircleImageButton(
                 imageVector = Icons.Default.ArrowBack,
@@ -87,7 +87,7 @@ fun LoginScreen(viewModel: SignInViewModel = koinViewModel()) {
                 modifier = Modifier,
                 placeholder = {
                     Text(
-                        "Email Address",
+                        "Email (username)",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
                     )
