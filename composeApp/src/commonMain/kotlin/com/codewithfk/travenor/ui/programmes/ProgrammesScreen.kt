@@ -1,4 +1,4 @@
-package com.codewithfk.travenor.programmes
+package com.codewithfk.travenor.ui.programmes
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

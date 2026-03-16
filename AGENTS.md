@@ -43,7 +43,7 @@
   - `domain/src/commonMain/kotlin/com/codewithfk/domain/model/Programme.kt`
   - `data/src/commonMain/kotlin/com/codewithfk/data/repository/ProgrammeRepositoryImpl.kt`
   - `presentation/src/commonMain/kotlin/com/codewithfk/presentation/feature/programmes/ProgrammesViewModel.kt`
-- `composeApp/src/commonMain/kotlin/com/codewithfk/travenor/programmes/ProgrammesScreen.kt`
+- `composeApp/src/commonMain/kotlin/com/codewithfk/travenor/ui/programmes/ProgrammesScreen.kt`
 - `presentation/src/commonMain/kotlin/com/codewithfk/presentation/feature/auth/JwtUtils.kt`
 
 ## Known Fix
