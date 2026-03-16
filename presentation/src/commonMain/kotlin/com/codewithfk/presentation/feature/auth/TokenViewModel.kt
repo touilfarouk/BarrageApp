@@ -22,8 +22,10 @@ class TokenViewModel(
     init {
         viewModelScope.launch {
             observeTokenUseCase.execute().collectLatest { token ->
+                val roles = token?.let { JwtUtils.extractRoles(it) }
                 _uiState.value = _uiState.value.copy(
                     token = token,
+                    roles = roles,
                     isLoading = false,
                     errorMessage = null
                 )
@@ -36,7 +38,12 @@ class TokenViewModel(
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
             try {
                 val token = getTokenUseCase.execute()
-                _uiState.value = _uiState.value.copy(token = token, isLoading = false)
+                val roles = token?.let { JwtUtils.extractRoles(it) }
+                _uiState.value = _uiState.value.copy(
+                    token = token,
+                    roles = roles,
+                    isLoading = false
+                )
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(errorMessage = e.message, isLoading = false)
             }
@@ -48,7 +55,7 @@ class TokenViewModel(
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
             try {
                 clearTokenUseCase.execute()
-                _uiState.value = _uiState.value.copy(token = null, isLoading = false)
+                _uiState.value = _uiState.value.copy(token = null, roles = null, isLoading = false)
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(errorMessage = e.message, isLoading = false)
             }

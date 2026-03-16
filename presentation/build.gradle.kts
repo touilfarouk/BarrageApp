@@ -39,6 +39,7 @@ kotlin {
                 implementation(libs.kotlin.stdlib)
                 implementation(project(":domain"))
                 implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.serialization.json)
                 implementation(libs.androidx.lifecycle.viewmodelCompose)
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose.viewmodel)

@@ -27,6 +27,7 @@ fun ProgrammesScreen(
     tokenViewModel: TokenViewModel = koinViewModel()
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle()
+    val tokenState = tokenViewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold { padding ->
         when {
@@ -45,9 +46,15 @@ fun ProgrammesScreen(
             else -> {
                 LazyColumn(modifier = Modifier.padding(padding)) {
                     item {
-                        Row(modifier = Modifier.padding(16.dp)) {
-                            Button(onClick = { tokenViewModel.logout() }) {
-                                Text("Log Out")
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(
+                                text = "Role: ${tokenState.value.roles ?: "-"}",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Row(modifier = Modifier.padding(top = 8.dp)) {
+                                Button(onClick = { tokenViewModel.logout() }) {
+                                    Text("Log Out")
+                                }
                             }
                         }
                     }

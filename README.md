@@ -33,3 +33,36 @@ in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and r
 ---
 
 Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+
+
+ create mode 100644 composeApp/src/androidMain/kotlin/com/codewithfk/travenor/storage/AndroidTokenStorage.kt
+ create mode 100644 composeApp/src/commonMain/kotlin/com/codewithfk/travenor/programmes/ProgrammesScreen.kt
+ create mode 100644 composeApp/src/iosMain/kotlin/com/codewithfk/travenor/storage/IosTokenStorage.kt
+ create mode 100644 data/src/commonMain/kotlin/com/codewithfk/data/mappers/ProgrammeMapper.kt
+ create mode 100644 data/src/commonMain/kotlin/com/codewithfk/data/model/ProgrammeDto.kt
+ create mode 100644 data/src/commonMain/kotlin/com/codewithfk/data/repository/ProgrammeRepositoryImpl.kt
+ create mode 100644 domain/src/commonMain/kotlin/com/codewithfk/domain/model/Programme.kt
+ create mode 100644 domain/src/commonMain/kotlin/com/codewithfk/domain/repository/ProgrammeRepository.kt
+ create mode 100644 domain/src/commonMain/kotlin/com/codewithfk/domain/storage/TokenStorage.kt
+ create mode 100644 domain/src/commonMain/kotlin/com/codewithfk/domain/usecase/ClearTokenUseCase.kt
+ create mode 100644 domain/src/commonMain/kotlin/com/codewithfk/domain/usecase/GetAllProgrammesUseCase.kt
+ create mode 100644 domain/src/commonMain/kotlin/com/codewithfk/domain/usecase/GetTokenUseCase.kt
+ create mode 100644 domain/src/commonMain/kotlin/com/codewithfk/domain/usecase/ObserveTokenUseCase.kt
+ create mode 100644 presentation/src/commonMain/kotlin/com/codewithfk/presentation/feature/auth/TokenUiState.kt
+ create mode 100644 presentation/src/commonMain/kotlin/com/codewithfk/presentation/feature/auth/TokenViewModel.kt
+ create mode 100644 presentation/src/commonMain/kotlin/com/codewithfk/presentation/feature/programmes/ProgrammesUiState.kt
+ create mode 100644 presentation/src/commonMain/kotlin/com/codewithfk/presentation/feature/programmes/ProgrammesViewModel.kt
+
+
+
+
+  Files updated/added
+
+  - presentation/build.gradle.kts (added kotlinx-serialization-json)
+  - presentation/src/commonMain/kotlin/com/codewithfk/presentation/feature/auth/JwtUtils.kt
+  - presentation/src/commonMain/kotlin/com/codewithfk/presentation/feature/auth/TokenUiState.kt
+  - presentation/src/commonMain/kotlin/com/codewithfk/presentation/feature/auth/TokenViewModel.kt
+  - composeApp/src/commonMain/kotlin/com/codewithfk/travenor/programmes/ProgrammesScreen.kt
+
+  This is only for display; it does not restrict access, so both ADMIN and AGENT can still load all programmes as
+  requested.

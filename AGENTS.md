@@ -22,8 +22,9 @@
 - Programmes listing:
   - New domain/model/repo/usecase and UI screen to list programmes from `/allprogrammes`.
 - Network security:
-  - Android `usesCleartextTraffic="true"` set.
-  - `composeApp/src/androidMain/res/xml/netowrk_config.xml` allows `213.179.181.50`.
+- Android `usesCleartextTraffic="true"` set.
+- `composeApp/src/androidMain/res/xml/netowrk_config.xml` allows `213.179.181.50`.
+- Roles shown in UI by decoding JWT (`UserInfo.roles`).
 
 ## Important Files
 - API + networking:
@@ -42,7 +43,8 @@
   - `domain/src/commonMain/kotlin/com/codewithfk/domain/model/Programme.kt`
   - `data/src/commonMain/kotlin/com/codewithfk/data/repository/ProgrammeRepositoryImpl.kt`
   - `presentation/src/commonMain/kotlin/com/codewithfk/presentation/feature/programmes/ProgrammesViewModel.kt`
-  - `composeApp/src/commonMain/kotlin/com/codewithfk/travenor/programmes/ProgrammesScreen.kt`
+- `composeApp/src/commonMain/kotlin/com/codewithfk/travenor/programmes/ProgrammesScreen.kt`
+- `presentation/src/commonMain/kotlin/com/codewithfk/presentation/feature/auth/JwtUtils.kt`
 
 ## Known Fix
 - DataStore key import: use `stringPreferencesKey` (not `preferencesKey`).
