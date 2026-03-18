@@ -2,6 +2,7 @@ package com.codewithfk.presentation.feature.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.codewithfk.domain.storage.RememberMeStorage
 import com.codewithfk.domain.storage.TokenStorage
 import com.codewithfk.domain.usecase.SignInUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,7 +11,8 @@ import kotlinx.coroutines.launch
 
 class SignInViewModel(
     private val loginUseCase: SignInUseCase,
-    private val tokenStorage: TokenStorage
+    private val tokenStorage: TokenStorage,
+    private val rememberMeStorage: RememberMeStorage
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SignInUiState())
@@ -22,12 +24,28 @@ class SignInViewModel(
     private val _password = MutableStateFlow("")
     val password = _password.asStateFlow()
 
+    private val _rememberMe = MutableStateFlow(false)
+    val rememberMe = _rememberMe.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            _rememberMe.value = rememberMeStorage.getRememberMe()
+        }
+    }
+
     fun onEmailChange(newEmail: String) {
         _email.value = newEmail
     }
 
     fun onPasswordChange(newPassword: String) {
         _password.value = newPassword
+    }
+
+    fun onRememberMeChange(enabled: Boolean) {
+        _rememberMe.value = enabled
+        viewModelScope.launch {
+            rememberMeStorage.setRememberMe(enabled)
+        }
     }
 
     fun signIn() {

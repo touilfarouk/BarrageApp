@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -53,6 +54,7 @@ fun LoginScreen(
     val uiState = viewModel.uiState.collectAsState()
     val email = viewModel.email.collectAsState()
     val password = viewModel.password.collectAsState()
+    val rememberMe = viewModel.rememberMe.collectAsState()
     val tokenState = tokenViewModel.uiState.collectAsState()
 
     Scaffold {
@@ -141,9 +143,19 @@ fun LoginScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                Checkbox(
+                    checked = rememberMe.value,
+                    onCheckedChange = { viewModel.onRememberMeChange(it) }
+                )
+                Text(
+                    "Se souvenir de moi",
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
+                )
                 Spacer(modifier = Modifier.weight(1f))
-                TextButton(onClick = {}, modifier = Modifier.padding(16.dp)) {
+                TextButton(onClick = {}, modifier = Modifier.padding(8.dp)) {
                     Text(
                         "Forgot Password?",
                         modifier = Modifier,

@@ -2,6 +2,7 @@ package com.codewithfk.presentation.feature.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.codewithfk.domain.storage.RememberMeStorage
 import com.codewithfk.domain.usecase.ClearTokenUseCase
 import com.codewithfk.domain.usecase.GetTokenUseCase
 import com.codewithfk.domain.usecase.ObserveTokenUseCase
@@ -13,7 +14,8 @@ import kotlinx.coroutines.launch
 class TokenViewModel(
     private val getTokenUseCase: GetTokenUseCase,
     private val clearTokenUseCase: ClearTokenUseCase,
-    private val observeTokenUseCase: ObserveTokenUseCase
+    private val observeTokenUseCase: ObserveTokenUseCase,
+    private val rememberMeStorage: RememberMeStorage
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TokenUiState(isLoading = true))
@@ -21,6 +23,10 @@ class TokenViewModel(
 
     init {
         viewModelScope.launch {
+            val rememberMe = rememberMeStorage.getRememberMe()
+            if (!rememberMe) {
+                clearTokenUseCase.execute()
+            }
             observeTokenUseCase.execute().collectLatest { token ->
                 val roles = token?.let { JwtUtils.extractRoles(it) }
                 _uiState.value = _uiState.value.copy(

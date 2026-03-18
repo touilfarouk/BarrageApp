@@ -15,8 +15,8 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val presentationModule = module {
-    viewModel { SignInViewModel(get<SignInUseCase>(), get<TokenStorage>()) }
+    viewModel { SignInViewModel(get<SignInUseCase>(), get<TokenStorage>(), get()) }
     viewModel { RegisterViewModel(get<RegisterUseCase>()) }
-    viewModel { TokenViewModel(get<GetTokenUseCase>(), get<ClearTokenUseCase>(), get<ObserveTokenUseCase>()) }
+    viewModel { TokenViewModel(get<GetTokenUseCase>(), get<ClearTokenUseCase>(), get<ObserveTokenUseCase>(), get()) }
     viewModel { ProgrammesViewModel(get<GetAllProgrammesUseCase>(), get<GetTokenUseCase>()) }
 }

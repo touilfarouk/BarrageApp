@@ -96,4 +96,31 @@ Done. The toast/alert is now shown as a Snackbar before redirecting to login.
   - composeApp/src/commonMain/kotlin/com/codewithfk/travenor/ui/programmes/ProgrammesScreen.kt
 
   If you want the Snackbar to persist longer or use a dialog instead, tell me your preference.
+
+
+
+
+• Done. The “Se souvenir de moi” checkbox now persists across logout and app restarts.
+
+  What I changed:
+
+  - Added RememberMeStorage in domain.
+  - Implemented persistence in Android (DataStore) and iOS (NSUserDefaults).
+  - Wired it into Koin on both platforms.
+  - SignInViewModel now loads and saves the remember-me value.
+  - LoginScreen uses the ViewModel state instead of local state.
+
+  Updated files:
+
+  - domain/src/commonMain/kotlin/com/codewithfk/domain/storage/RememberMeStorage.kt
+  - composeApp/src/androidMain/kotlin/com/codewithfk/travenor/storage/AndroidTokenStorage.kt
+  - composeApp/src/iosMain/kotlin/com/codewithfk/travenor/storage/IosTokenStorage.kt
+  - composeApp/src/androidMain/kotlin/com/codewithfk/travenor/di/AppModule.android.kt
+  - composeApp/src/iosMain/kotlin/com/codewithfk/travenor/di/AppModule.ios.kt
+  - presentation/src/commonMain/kotlin/com/codewithfk/presentation/feature/register/SignInViewModel.kt
+  - presentation/src/commonMain/kotlin/com/codewithfk/presentation/di/PresentationModule.kt
+  - composeApp/src/commonMain/kotlin/com/codewithfk/travenor/ui/signin/LoginScreen.kt
+
+  If you want “remember me” to also control whether the token is stored (i.e., don’t save token when unchecked), say the
+  word and I’ll wire that behavior too.
   
