@@ -13,7 +13,8 @@ class ProgrammeRepositoryImpl(private val dataSource: RemoteDataSource) : Progra
                 val dtos = response.getOrNull().orEmpty()
                 Result.success(ProgrammeMapper.toDomain(dtos))
             } else {
-                Result.failure(Exception("Failed to load programmes: ${response.exceptionOrNull()}"))
+                val exception = response.exceptionOrNull()
+                Result.failure(exception ?: Exception("Failed to load programmes."))
             }
         } catch (e: Exception) {
             Result.failure(e)

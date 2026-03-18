@@ -2,6 +2,7 @@ package com.codewithfk.presentation.feature.programmes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.codewithfk.domain.error.AuthExpiredException
 import com.codewithfk.domain.usecase.GetAllProgrammesUseCase
 import com.codewithfk.domain.usecase.GetTokenUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,6 +39,14 @@ class ProgrammesViewModel(
                     isLoading = false
                 )
             }.onFailure { error ->
+                if (error is AuthExpiredException) {
+                    _uiState.value = _uiState.value.copy(
+                        errorMessage = error.message ?: "Session expired. Please sign in again.",
+                        sessionExpired = true,
+                        isLoading = false
+                    )
+                    return@onFailure
+                }
                 _uiState.value = _uiState.value.copy(
                     errorMessage = error.message,
                     isLoading = false

@@ -9,7 +9,14 @@ import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.request.header
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import io.ktor.http.isSuccess
+import com.codewithfk.domain.error.AuthExpiredException
+import com.codewithfk.domain.error.UnexpectedResponseException
 
 class RemoteDataSource(private val httpClient: HttpClient, private val baseUrl: String) {
     private val BASE_URL = baseUrl
@@ -42,6 +49,72 @@ class RemoteDataSource(private val httpClient: HttpClient, private val baseUrl: 
         return try {
             val response = httpClient.post(urlString = PROGRAMMES_ENDPOINT) {
                 header(HttpHeaders.Authorization, "Bearer $token")
+            }
+            var status = response.status
+            if (status == HttpStatusCode.Found) {
+                val location = response.headers[HttpHeaders.Location]
+                if (!location.isNullOrBlank() && location.startsWith("https://")) {
+                    val retryResponse = httpClient.post(urlString = location) {
+                        header(HttpHeaders.Authorization, "Bearer $token")
+                    }
+                    status = retryResponse.status
+                    if (!status.isSuccess()) {
+                        return Result.failure(
+                            UnexpectedResponseException(
+                                statusCode = status.value,
+                                contentType = retryResponse.contentType()?.toString(),
+                                body = retryResponse.bodyAsText(),
+                                location = location
+                            )
+                        )
+                    }
+                    val contentType = retryResponse.contentType()
+                    if (contentType == null || !contentType.match(ContentType.Application.Json)) {
+                        return Result.failure(
+                            UnexpectedResponseException(
+                                statusCode = status.value,
+                                contentType = contentType?.toString(),
+                                body = retryResponse.bodyAsText(),
+                                location = location
+                            )
+                        )
+                    }
+                    return Result.success(retryResponse.body())
+                } else {
+                    return Result.failure(
+                        UnexpectedResponseException(
+                            statusCode = status.value,
+                            contentType = response.contentType()?.toString(),
+                            body = response.bodyAsText(),
+                            location = location
+                        )
+                    )
+                }
+            }
+            if (status == HttpStatusCode.Found ||
+                status == HttpStatusCode.Unauthorized ||
+                status == HttpStatusCode.Forbidden
+            ) {
+                return Result.failure(AuthExpiredException("Session expired. Please sign in again."))
+            }
+            if (!status.isSuccess()) {
+                return Result.failure(
+                    UnexpectedResponseException(
+                        statusCode = status.value,
+                        contentType = response.contentType()?.toString(),
+                        body = response.bodyAsText()
+                    )
+                )
+            }
+            val contentType = response.contentType()
+            if (contentType == null || !contentType.match(ContentType.Application.Json)) {
+                return Result.failure(
+                    UnexpectedResponseException(
+                        statusCode = status.value,
+                        contentType = contentType?.toString(),
+                        body = response.bodyAsText()
+                    )
+                )
             }
             Result.success(response.body())
         } catch (ex: Exception) {

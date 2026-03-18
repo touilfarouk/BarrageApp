@@ -52,3 +52,48 @@
 ## Next Steps (Optional)
 - Improve programmes UI and map additional fields from API response.
 - Add pull-to-refresh and pagination if needed.
+
+
+• Root cause: when the token is expired the API returns 302 with text/html, and response.body<List<ProgrammeDto>>()
+  tries to deserialize HTML as JSON. That triggers NoTransformationFoundException. The fix is to check status/content-
+  type first, detect auth expiry, and clear the token so the app navigates back to login.
+
+  I made the following changes:
+
+  1. Added explicit response checks in RemoteDataSource.getProgrammes so we don’t attempt JSON parsing on 302/HTML and
+     instead return a typed auth-expired error.
+  2. Introduced AuthExpiredException and UnexpectedResponseException in domain for clean propagation.
+  3. Propagated original exceptions from ProgrammeRepositoryImpl (no wrapping), so the UI can detect auth expiry.
+  4. In ProgrammesViewModel, clear the token when auth expires to trigger redirect.
+
+  Changed files:
+
+  - data/src/commonMain/kotlin/com/codewithfk/data/datasource/RemoteDataSource.kt
+  - domain/src/commonMain/kotlin/com/codewithfk/domain/error/NetworkExceptions.kt
+  - data/src/commonMain/kotlin/com/codewithfk/data/repository/ProgrammeRepositoryImpl.kt
+  - presentation/src/commonMain/kotlin/com/codewithfk/presentation/feature/programmes/ProgrammesViewModel.kt
+  - presentation/src/commonMain/kotlin/com/codewithfk/presentation/di/PresentationModule.kt
+
+  If you want, I can also:
+
+  1. Add a toast/alert on session expiry before redirect.
+Done. The toast/alert is now shown as a Snackbar before redirecting to login.
+
+  What changed:
+
+  - Added a sessionExpired flag to ProgrammesUiState.
+  - ProgrammesViewModel now sets sessionExpired = true on AuthExpiredException instead of clearing the token
+    immediately.
+  - ProgrammesScreen shows a Snackbar when sessionExpired becomes true, then calls tokenViewModel.logout() after the
+    Snackbar is displayed.
+  - Updated DI to match the new ProgrammesViewModel signature.
+
+  Updated files:
+
+  - presentation/src/commonMain/kotlin/com/codewithfk/presentation/feature/programmes/ProgrammesUiState.kt
+  - presentation/src/commonMain/kotlin/com/codewithfk/presentation/feature/programmes/ProgrammesViewModel.kt
+  - presentation/src/commonMain/kotlin/com/codewithfk/presentation/di/PresentationModule.kt
+  - composeApp/src/commonMain/kotlin/com/codewithfk/travenor/ui/programmes/ProgrammesScreen.kt
+
+  If you want the Snackbar to persist longer or use a dialog instead, tell me your preference.
+  
