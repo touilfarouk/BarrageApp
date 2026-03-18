@@ -29,12 +29,24 @@ class SignInViewModel(
 
     init {
         viewModelScope.launch {
-            _rememberMe.value = rememberMeStorage.getRememberMe()
+            val rememberMe = rememberMeStorage.getRememberMe()
+            _rememberMe.value = rememberMe
+            if (rememberMe) {
+                val savedEmail = rememberMeStorage.getSavedEmail()
+                if (!savedEmail.isNullOrBlank()) {
+                    _email.value = savedEmail
+                }
+            }
         }
     }
 
     fun onEmailChange(newEmail: String) {
         _email.value = newEmail
+        if (_rememberMe.value) {
+            viewModelScope.launch {
+                rememberMeStorage.setSavedEmail(newEmail)
+            }
+        }
     }
 
     fun onPasswordChange(newPassword: String) {
@@ -45,6 +57,11 @@ class SignInViewModel(
         _rememberMe.value = enabled
         viewModelScope.launch {
             rememberMeStorage.setRememberMe(enabled)
+            if (enabled) {
+                rememberMeStorage.setSavedEmail(_email.value)
+            } else {
+                rememberMeStorage.setSavedEmail(null)
+            }
         }
     }
 
@@ -54,6 +71,9 @@ class SignInViewModel(
             val result = loginUseCase.execute(_email.value, _password.value)
             result.onSuccess { token ->
                 tokenStorage.saveToken(token.accessToken)
+                if (_rememberMe.value) {
+                    rememberMeStorage.setSavedEmail(_email.value)
+                }
                 _uiState.value = _uiState.value.copy(token = token, isLoading = false)
             }.onFailure { error ->
                 _uiState.value =

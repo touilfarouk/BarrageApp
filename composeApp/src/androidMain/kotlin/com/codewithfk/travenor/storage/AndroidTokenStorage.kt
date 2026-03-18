@@ -20,6 +20,7 @@ class AndroidTokenStorage(
 
     private val tokenKey: Preferences.Key<String> = stringPreferencesKey("access_token")
     private val rememberMeKey: Preferences.Key<Boolean> = booleanPreferencesKey("remember_me")
+    private val savedEmailKey: Preferences.Key<String> = stringPreferencesKey("saved_email")
 
     override val tokenFlow: Flow<String?> =
         context.dataStore.data.map { prefs -> prefs[tokenKey] }
@@ -50,6 +51,20 @@ class AndroidTokenStorage(
     override suspend fun setRememberMe(enabled: Boolean) {
         context.dataStore.edit { prefs ->
             prefs[rememberMeKey] = enabled
+        }
+    }
+
+    override suspend fun getSavedEmail(): String? {
+        return context.dataStore.data.first()[savedEmailKey]
+    }
+
+    override suspend fun setSavedEmail(email: String?) {
+        context.dataStore.edit { prefs ->
+            if (email.isNullOrBlank()) {
+                prefs.remove(savedEmailKey)
+            } else {
+                prefs[savedEmailKey] = email
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ class IosTokenStorage : TokenStorage, RememberMeStorage {
     private val defaults = NSUserDefaults.standardUserDefaults
     private val key = "access_token"
     private val rememberMeKey = "remember_me"
+    private val savedEmailKey = "saved_email"
     private val state = MutableStateFlow(defaults.stringForKey(key))
     private val rememberMeState = MutableStateFlow(defaults.boolForKey(rememberMeKey))
 
@@ -38,5 +39,17 @@ class IosTokenStorage : TokenStorage, RememberMeStorage {
     override suspend fun setRememberMe(enabled: Boolean) {
         defaults.setBool(enabled, forKey = rememberMeKey)
         rememberMeState.value = enabled
+    }
+
+    override suspend fun getSavedEmail(): String? {
+        return defaults.stringForKey(savedEmailKey)
+    }
+
+    override suspend fun setSavedEmail(email: String?) {
+        if (email.isNullOrBlank()) {
+            defaults.removeObjectForKey(savedEmailKey)
+        } else {
+            defaults.setObject(email, forKey = savedEmailKey)
+        }
     }
 }
